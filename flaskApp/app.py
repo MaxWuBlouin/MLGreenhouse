@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, render_template
 import socket
 
 SERVER_PORT = 8000
@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Pages
 @app.route("/")
 def index():
-    return "Hello, World!"
+    return render_template("index.html")
 
 # Run flask app
 if __name__ == "__main__":
