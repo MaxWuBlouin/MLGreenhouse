@@ -10,6 +10,7 @@ def generate_frames():
         success, frame = webcam.read()
         if not success:
             break
+        frame = cv2.rotate(frame, cv2.ROTATE_180)
         ret, buffer = cv2.imencode(".jpg", frame)
         frame = buffer.tobytes()
         yield(b"--frame\r\n"
