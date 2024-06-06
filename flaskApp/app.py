@@ -3,6 +3,8 @@
 from flask import Flask, render_template
 import socket
 
+from camera import camera
+
 SERVER_PORT = 8000
 
 # Find current device's local network IP address
@@ -12,6 +14,9 @@ server_IP = sock.getsockname()[0]
 
 # Create flask app
 app = Flask(__name__)
+
+#Register blueprints
+app.register_blueprint(camera, url_prefix="/camera")
 
 # Pages
 @app.route("/")
