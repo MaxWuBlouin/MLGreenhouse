@@ -1,21 +1,28 @@
 from flask import Blueprint, render_template, Response
 import cv2
 
+IMAGE_FORMAT = ".jpg"
+CONTENT_TYPE = "multipart/x-mixed-replace; boundary=frame"
+IMAGE_HEADER = b"--frame\r\nContent-Type: image/jpeg\r\n\r\n"
+
+# Initialize Flask Blueprint
 camera = Blueprint(__name__, "camera")
 
-webcam = cv2.VideoCapture(0)
+# Initialize webcam object
+webcam1 = cv2.VideoCapture(0)
 
-def generate_frames():
+# Continuously stream video from webcam
+def generate_frames(webcam):
     while True:
         success, frame = webcam.read()
+
         if not success:
             break
+        
         frame = cv2.rotate(frame, cv2.ROTATE_180)
-        ret, buffer = cv2.imencode(".jpg", frame)
-        frame = buffer.tobytes()
-        yield(b"--frame\r\n"
-            b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
-
+        success, frame = cv2.imencode(IMAGE_FORMAT, frame)
+        
+        yield(IMAGE_HEADER + frame.tobytes())
 
 @camera.route("/")
 def homepage():
@@ -23,4 +30,4 @@ def homepage():
 
 @camera.route("/webcam")
 def stream():
-    return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
+    return Response(generate_frames(webcam1), mimetype=CONTENT_TYPE)
