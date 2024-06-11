@@ -11,14 +11,14 @@ WEBCAM_PORTS = [0,2]
 camera = Blueprint(__name__, "camera")
 
 # Initialize webcam objects
-webcam = cv2.VideoCapture(0, cv2.CAP_V4L2)
+webcam = [cv2.VideoCapture(0, cv2.CAP_V4L2)]
 
 # Toggle between cameras
 # Note: The Raspberry Pi 3B+ cannot handle multiple camera streams at once.
 #       For this reason, the program must toggle between cameras.
 webcam_index = 0
-def toggle_webcam(webcam):
-    webcam.release()
+def toggle_webcam(cam):
+    cam.release()
     
     if webcam_index == len(WEBCAM_PORTS):
         webcam_index = 0
@@ -42,8 +42,8 @@ def generate_frames():
 
 @camera.route("/")
 def homepage():
-    webcam = toggle_webcam(webcam)
-    return render_template("camera.html")
+    webcam[0] = toggle_webcam(webcam[0])
+    return render_template("camera.h]tml")
 
 @camera.route("/webcam1")
 def stream():
