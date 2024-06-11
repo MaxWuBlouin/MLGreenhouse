@@ -22,7 +22,7 @@ def toggle_webcam():
     
     webcam_index[0] = (webcam_index[0] + 1) % len(WEBCAM_PORTS)
     
-    webcam[0] = cv2.VideoCapture(webcam_index[0])
+    webcam[0] = cv2.VideoCapture(WEBCAM_PORTS[webcam_index[0]])
 
 # Continuously stream video from webcam
 def generate_frames():
