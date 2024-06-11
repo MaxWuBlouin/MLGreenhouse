@@ -8,8 +8,9 @@ IMAGE_HEADER = b"--frame\r\nContent-Type: image/jpeg\r\n\r\n"
 # Initialize Flask Blueprint
 camera = Blueprint(__name__, "camera")
 
-# Initialize webcam object
+# Initialize webcam objects
 webcam1 = cv2.VideoCapture(0)
+webcam2 = cv2.VideoCapture(1)
 
 # Continuously stream video from webcam
 def generate_frames(webcam):
@@ -28,6 +29,10 @@ def generate_frames(webcam):
 def homepage():
     return render_template("camera.html")
 
-@camera.route("/webcam")
-def stream():
+@camera.route("/webcam1")
+def stream1():
     return Response(generate_frames(webcam1), mimetype=CONTENT_TYPE)
+
+@camera.route("/webcam2")
+def stream2():
+    return Response(generate_frames(webcam2), mimetype=CONTENT_TYPE)
