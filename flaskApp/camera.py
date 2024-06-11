@@ -5,13 +5,13 @@ IMAGE_FORMAT = ".jpg"
 CONTENT_TYPE = "multipart/x-mixed-replace; boundary=frame"
 IMAGE_HEADER = b"--frame\r\nContent-Type: image/jpeg\r\n\r\n"
 
-WEBCAM_PORTS = [0,2]
+WEBCAM_PORTS = [0,1]
 
 # Initialize Flask Blueprint
 camera = Blueprint(__name__, "camera")
 
 # Initialize webcam objects
-webcam = [cv2.VideoCapture(0, cv2.CAP_V4L2)]
+webcam = [cv2.VideoCapture(0)]
 
 # Toggle between cameras
 # Note: The Raspberry Pi 3B+ cannot handle multiple camera streams at once.
@@ -20,17 +20,14 @@ webcam_index = [0]
 def toggle_webcam():
     webcam[0].release()
     
-    if webcam_index[0] == len(WEBCAM_PORTS):
-        webcam_index[0] = 0
-    else:
-        webcam_index[0] += 1
+    webcam_index[0] = (webcam_index[0] + 1) % len(WEBCAM_PORTS)
     
-    webcam[0] = cv2.VideoCapture(webcam_index[0], cv2.CAP_V4L2)
+    webcam[0] = cv2.VideoCapture(webcam_index[0])
 
 # Continuously stream video from webcam
 def generate_frames():
     while True:
-        success, frame = webcam.read()
+        success, frame = webcam[0].read()
 
         if not success:
             break
@@ -42,9 +39,9 @@ def generate_frames():
 
 @camera.route("/")
 def homepage():
-    webcam[0] = toggle_webcam()
+    toggle_webcam()
     return render_template("camera.html")
 
-@camera.route("/webcam1")
+@camera.route("/webcam")
 def stream():
     return Response(generate_frames(), mimetype=CONTENT_TYPE)
