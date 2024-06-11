@@ -13,9 +13,22 @@ webcam1 = cv2.VideoCapture(0)
 webcam2 = cv2.VideoCapture(2)
 
 # Continuously stream video from webcam
-def generate_frames(webcam):
+def generate_frames1():
     while True:
-        success, frame = webcam.read()
+        success, frame = webcam1.read()
+
+        if not success:
+            break
+        
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        success, frame = cv2.imencode(IMAGE_FORMAT, frame)
+        
+        yield(IMAGE_HEADER + frame.tobytes())
+
+# Continuously stream video from webcam
+def generate_frames2():
+    while True:
+        success, frame = webcam2.read()
 
         if not success:
             break
@@ -31,8 +44,8 @@ def homepage():
 
 @camera.route("/webcam1")
 def stream1():
-    return Response(generate_frames(webcam1), mimetype=CONTENT_TYPE)
+    return Response(generate_frames1(), mimetype=CONTENT_TYPE)
 
 @camera.route("/webcam2")
 def stream2():
-    return Response(generate_frames(webcam2), mimetype=CONTENT_TYPE)
+    return Response(generate_frames2(), mimetype=CONTENT_TYPE)
