@@ -10,7 +10,7 @@ camera = Blueprint(__name__, "camera")
 
 # Initialize webcam objects
 webcam1 = cv2.VideoCapture(0)
-webcam2 = cv2.VideoCapture(0)
+webcam2 = cv2.VideoCapture(2)
 
 # Continuously stream video from webcam
 def generate_frames(webcam):
@@ -20,7 +20,7 @@ def generate_frames(webcam):
         if not success:
             break
         
-        frame = cv2.rotate(frame, cv2.ROTATE_180)
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
         success, frame = cv2.imencode(IMAGE_FORMAT, frame)
         
         yield(IMAGE_HEADER + frame.tobytes())
