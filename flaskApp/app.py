@@ -4,6 +4,7 @@ from flask import Flask, render_template
 import socket
 
 from camera import camera
+from controls import controls
 
 SERVER_PORT = 8000
 
@@ -17,6 +18,7 @@ app = Flask(__name__)
 
 #Register blueprints
 app.register_blueprint(camera, url_prefix="/camera")
+app.register_blueprint(controls, url_prefix="/controls")
 
 # Pages
 @app.route("/")
