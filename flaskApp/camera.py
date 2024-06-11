@@ -43,7 +43,7 @@ def generate_frames():
 @camera.route("/")
 def homepage():
     webcam[0] = toggle_webcam()
-    return render_template("camera.h]tml")
+    return render_template("camera.html")
 
 @camera.route("/webcam1")
 def stream():
