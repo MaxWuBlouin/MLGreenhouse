@@ -11,8 +11,8 @@ IMAGE_HEADER = b"--frame\r\nContent-Type: image/jpeg\r\n\r\n"
 camera = Blueprint(__name__, "camera")
 
 # Initialize webcam objects
-webcam1 = cv2.VideoCapture(0)
-webcam2 = cv2.VideoCapture(2)
+webcam1 = cv2.VideoCapture(0, cv2.CAP_V4L2)
+webcam2 = cv2.VideoCapture(2, cv2.CAP_V4L2)
 
 # Continuously stream video from webcam
 def generate_frames1():
