@@ -5,7 +5,7 @@ IMAGE_FORMAT = ".jpg"
 CONTENT_TYPE = "multipart/x-mixed-replace; boundary=frame"
 IMAGE_HEADER = b"--frame\r\nContent-Type: image/jpeg\r\n\r\n"
 
-WEBCAM_PORTS = [0,1]
+WEBCAM_PORTS = [0,2]
 
 # Initialize Flask Blueprint
 camera = Blueprint(__name__, "camera")
