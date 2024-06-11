@@ -17,7 +17,7 @@ webcam = cv2.VideoCapture(0, cv2.CAP_V4L2)
 # Note: The Raspberry Pi 3B+ cannot handle multiple camera streams at once.
 #       For this reason, the program must toggle between cameras.
 webcam_index = 0
-def toggle_webcam():
+def toggle_webcam(webcam):
     webcam.release()
     
     if webcam_index == len(WEBCAM_PORTS):
@@ -25,7 +25,7 @@ def toggle_webcam():
     else:
         webcam_index += 1
     
-    webcam = cv2.VideoCapture(webcam_index, cv2.CAP_V4L2)
+    return cv2.VideoCapture(webcam_index, cv2.CAP_V4L2)
 
 # Continuously stream video from webcam
 def generate_frames():
@@ -42,7 +42,7 @@ def generate_frames():
 
 @camera.route("/")
 def homepage():
-    toggle_webcam()
+    webcam = toggle_webcam()
     return render_template("camera.html")
 
 @camera.route("/webcam1")
