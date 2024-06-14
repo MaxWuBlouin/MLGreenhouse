@@ -64,11 +64,11 @@ def connect_devices():
     """
     connected_boards.clear()
 
-    ports = serial.tools.list_ports.comports()
+    ports = serial.tools.list_ports.comports(include_links=True)
     for port in ports:
         if "VID:PID" in port.hwid:
             serial_connection = serial.Serial(
-                port="/dev/ttyACM0",
+                port=port.name,
                 baudrate=BAUDRATE,
                 timeout = 1)
             connection_name = _request_name(serial_connection)
