@@ -68,7 +68,7 @@ def connect_devices():
     for port in ports:
         if "VID:PID" in port.hwid:
             serial_connection = serial.Serial(
-                port=port.name,
+                port="/dev/ttyACM0",
                 baudrate=BAUDRATE,
                 timeout = 1)
             connection_name = _request_name(serial_connection)
