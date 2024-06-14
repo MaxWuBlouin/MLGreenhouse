@@ -14,7 +14,6 @@ microcontroller (str) and the value corresponds to the connection
 import time
 
 import serial
-import serial.serialwin32
 import serial.tools
 import serial.tools.list_ports
 
@@ -24,7 +23,7 @@ connected_boards = {}   # Keys are strings, values are Serial connections
 BAUDRATE = 9600
 
 
-def _request_name(serial_connection: serial.serialwin32.Serial):
+def _request_name(serial_connection: serial.Serial):
     """
     Requests name from serial device and returns it. Returns None if
     name not found. Function sends 5 name requests before giving up.
