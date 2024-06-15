@@ -1,5 +1,5 @@
 import devices
+import webcams
 
-devices.connect_devices()
-print(devices.send_message("OUTLET", "test"))
-print(devices.send_message("WRONG", "message"))
+webcams.connect_cameras()
+webcams.request_image(0)
