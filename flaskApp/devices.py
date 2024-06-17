@@ -17,6 +17,8 @@ import serial
 import serial.tools
 import serial.tools.list_ports
 
+from logconfig import logger
+
 
 connected_boards = {}   # Keys are strings, values are Serial connections
 
@@ -36,16 +38,23 @@ def _request_name(serial_connection: serial.Serial):
     Returns:
         str: The name returned by the device (None if name not found).
     """
+    logger.info("Requesting device name.")
+    
     for i in range(5):
         serial_connection.write(("name").encode())
         time.sleep(0.01)
         serial_response = serial_connection.readline()
         serial_response = serial_response.decode()
         serial_response = serial_response.rstrip()
+        
         if (len(serial_response) > 2):
             if (serial_response[0] == "@" and serial_response[-1] == "@"):
                 serial_response = serial_response.strip("@")
+                logger.info("Found device '" + serial_response
+                    + "' after " + str(i) + " attempts.")
                 return serial_response
+    
+    logger.warning("Could not find device name.")
     return None
 
 
@@ -62,6 +71,7 @@ def connect_devices():
     Returns:
         None
     """
+    logger.info("Connecting boards.")
     connected_boards.clear()
 
     ports = serial.tools.list_ports.comports()
@@ -75,6 +85,8 @@ def connect_devices():
             if connection_name != None:
                 connected_boards[connection_name] = serial_connection
             serial_connection.close()
+    
+    logger.info("Connected to " + str(len(connected_boards)) + " devices.")
     return None
 
 
@@ -90,12 +102,17 @@ def send_message(device_name: str, message: str):
     Returns:
         str: Response from device (or error message).
     """
+    logger.info("Sending message '" + message + "' to device '"
+        + device_name + "'")
+    
     if device_name not in connected_boards:
+        logger.error("Device name not found.")
         return "Error: Device name not found."
     else:
         try:
             connected_boards[device_name].open()
         except:
+            logger.error("Could not open connection.")
             return "Error: Could not open connection."
         for i in range(5):
             connected_boards[device_name].write(message.encode())
@@ -103,9 +120,14 @@ def send_message(device_name: str, message: str):
             serial_response = connected_boards[device_name].readline()
             serial_response = serial_response.decode()
             serial_response = serial_response.rstrip()
+            
             if (len(serial_response) > 2):
                 if (serial_response[0] == "#" and serial_response[-1] == "#"):
                     serial_response = serial_response.strip("#")
                     connected_boards[device_name].close()
+                    logger.info("Received message '" + serial_response
+                        + "' after " + str(i) + " attempts.")
                     return serial_response
+    
+    logger.error("No valid response received.")
     return "Error: No valid response received."

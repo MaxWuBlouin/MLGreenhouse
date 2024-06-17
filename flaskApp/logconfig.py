@@ -1,19 +1,23 @@
 """
+This module handles all configuration settings for using the Python
+'logging' library. To use it, run 'from logconfig import logger' and
+use the methods from the Python 'logging' library. All logged messages
+are saved to 'logfile.csv'.
 """
-import datetime
 import logging
 import os
 
 
 DIRECTORY = os.path.dirname(__file__)
-LOGGER_DIRECTORY = DIRECTORY + "/filename.csv"
+LOGFILE_DIRECTORY = DIRECTORY + "/logfile.csv"
+
 
 # Create or get a logger
 logger = logging.getLogger("MLGreenhouse_logger")
 logger.setLevel(logging.DEBUG)
 
 # Create a FileHandler (default is append mode)
-file_handler = logging.FileHandler("logfile.csv")
+file_handler = logging.FileHandler(LOGFILE_DIRECTORY)
 file_handler.setLevel(logging.DEBUG)
 
 # Create a custom formatter for CSV format
