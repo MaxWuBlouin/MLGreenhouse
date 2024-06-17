@@ -1,5 +1,6 @@
 import devices
 import webcams
+from logconfig import logger
 
-webcams.connect_cameras()
-webcams.request_image(0)
+logger.info("This is a test message")
+logger.error("This is a test error message")
