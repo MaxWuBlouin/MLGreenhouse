@@ -40,7 +40,7 @@ def _request_name(serial_connection: serial.Serial):
     """
     logger.info("Requesting device name.")
     
-    for i in range(1, 6):
+    for i in range(1, 9):
         serial_connection.write(("name").encode())
         time.sleep(0.01)
         serial_response = serial_connection.readline()
@@ -114,7 +114,7 @@ def send_message(device_name: str, message: str):
         except:
             logger.error("Could not open connection.")
             return "Error: Could not open connection."
-        for i in range(1, 6):
+        for i in range(1, 9):
             connected_boards[device_name].write(message.encode())
             time.sleep(0.01)
             serial_response = connected_boards[device_name].readline()
