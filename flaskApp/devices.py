@@ -54,7 +54,7 @@ def _request_name(serial_connection: serial.Serial):
                     + "' after " + str(i) + " attempts.")
                 return serial_response
     
-    logger.warning("Could not find device name.")
+    logger.error("Could not find device name.")
     return None
 
 
