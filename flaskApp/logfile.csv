@@ -1,0 +1,16 @@
+2024-06-20 03:10:55,554,MLGreenhouse_logger,INFO,webcams,Creating images directory.
+2024-06-20 03:10:55,555,MLGreenhouse_logger,INFO,main,Running main program.
+2024-06-20 03:10:55,555,MLGreenhouse_logger,INFO,devices,Connecting boards.
+2024-06-20 03:10:55,571,MLGreenhouse_logger,INFO,devices,Requesting device name.
+2024-06-20 03:10:58,616,MLGreenhouse_logger,INFO,devices,Found device 'OUTLET' after 4 attempts.
+2024-06-20 03:10:58,617,MLGreenhouse_logger,INFO,devices,Connected to 1 devices.
+2024-06-20 03:10:58,618,MLGreenhouse_logger,INFO,devices,Sending message 'test' to device 'OUTLET'
+2024-06-20 03:11:01,669,MLGreenhouse_logger,INFO,devices,Received message 'It worked!' after 4 attempts.
+2024-06-20 03:11:01,670,MLGreenhouse_logger,INFO,devices,Sending message 'message' to device 'WRONG'
+2024-06-20 03:11:01,670,MLGreenhouse_logger,ERROR,devices,Device name not found.
+2024-06-20 03:11:01,670,MLGreenhouse_logger,INFO,webcams,Connecting webcams.
+2024-06-20 03:11:06,522,MLGreenhouse_logger,INFO,webcams,Connected to 2 webcams.
+2024-06-20 03:11:06,522,MLGreenhouse_logger,INFO,webcams,Requesting image from camera at index 0.
+2024-06-20 03:11:07,455,MLGreenhouse_logger,INFO,webcams,Image saved at /home/max/MLGreenhouse/flaskApp/images/0_2024-06-20_03-11-06.jpg.
+2024-06-20 03:11:07,455,MLGreenhouse_logger,INFO,webcams,Requesting image from camera at index 2.
+2024-06-20 03:11:07,789,MLGreenhouse_logger,INFO,webcams,Image saved at /home/max/MLGreenhouse/flaskApp/images/2_2024-06-20_03-11-07.jpg.
