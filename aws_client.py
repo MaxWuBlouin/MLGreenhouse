@@ -1,41 +1,55 @@
-import sys
-import threading
 import time
 import json
+import threading
 
-from awscrt import mqtt, http
-from awsiot import mqtt_connection_builder
+import paho.mqtt.client as mqtt
 
-received_count = 0
-received_all_event = threading.Event()
 
-# Callback when connection is accidentally lost
-def on_connection_interrupted(connection, error, **kwargs):
-    print("Connection interrupted. error: {}".format(error))
+ROOT_CERTIFICATE = "certifications/AmazonRootCA1.pem"
+CERTIFICATE = "certifications/certificate.pem.crt"
+PRIVATE_KEY = "certifications/private.pem.key"
 
-# Callback when an interrupted connection is re-established
-def on_connection_resumed(connection, return_code, session_present, **kwargs):
-    print("Connection resumed. return_code {} session_present: {}".format(return_code, session_present))
+HOST_ADDRESS = "airxh5i12mupp-ats.iot.us-east-2.amazonaws.com"
+HOST_PORT = 8883
+KEEPALIVE_INTERVAL = 60
 
-    if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
-        print("Seesion did not persist. Resubscribing to existing topics...")
-        resubscribe_future, _ = connection.resubscribe_existing_topics()
 
-        # Cannot subnchronously wait for resubscribe result because we're on the connection's event-loop thread,
-        # evaluate results with a callback instead
-        resubscribe_future.add_done_callback(on_resubscribe_complete)
+def on_connect(client, userdata, flags, return_code, properties=None):
+    print("Client:", client)
+    print("User data:", userdata)
+    print("Flags:", flags)
+    print("Return code:", return_code)
 
-def on_resubscribe_complete(resubscribe_future):
-    resubscribe_results = resubscribe_future.result()
-    print("Resubscribe results: {}".format(resubscribe_results))
 
-    for topic, qos in resubscribe_results["topics"]:
-        if qos is None:
-            sys.exit("Server rejected resubscribe to topic: {}".format(topic))
+#def on_message(mqttc)
 
-# Callback when the subscribed topic receives a message
-def on_message_received(topic, payload, dup, qos, retain, **kwargs):
-    print("Received message from topic '{}': {}".format(topic, payload))
-    global received_count
-    received_count += 1
-    
+
+client = mqtt.Client(protocol=mqtt.MQTTv5)
+client.on_connect = on_connect
+client.tls_set(ca_certs=ROOT_CERTIFICATE,
+               certfile=CERTIFICATE,
+               keyfile=PRIVATE_KEY,
+               tls_version=2)
+client.tls_insecure_set(True)
+client.connect(host=HOST_ADDRESS,
+               port=HOST_PORT,
+               keepalive=KEEPALIVE_INTERVAL)
+
+
+def run():
+    client.loop_forever()
+    print("Connection ended")
+
+
+t1 = threading.Thread(target=run)
+
+client_active = True
+t1.start()
+time.sleep(5)
+client.publish("raspi/data", payload="hello")
+client.subscribe("raspi/command")
+time.sleep(5)
+client.disconnect()
+t1.join()
+
+print("Program ends.")
