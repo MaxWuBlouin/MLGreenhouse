@@ -1,9 +1,14 @@
+import json
+
 import devices
 import webcams
+import aws_client
 from logconfig import logger
 
 logger.info("Running main program.")
 
-devices.connect_devices()
-devices.send_message("OUTLET", "A:ON")
-devices.send_message("OUTLET", "SOMETHING")
+message = json.dumps({"message": "hello"})
+
+aws_client.publish(message)
+
+input()

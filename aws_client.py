@@ -1,4 +1,16 @@
 """
+This module handles the connection to the AWS server via AWS Iot Core.
+When imported, it automatically establishes a connection with the
+server, so it should only be imported by one module.
+
+The client-server connection uses the MQTT communication protocol. All
+incoming and outgoing messages are encoded as JSON strings.
+
+To send messages to the server, use the publish() function. To modify
+the client's message callback behaviour (what it does when it receives
+a message), set the function 'message_callback' to a custom function.
+It must have arguments (topic: str, message: str) and return a JSON
+string.
 """
 
 
@@ -15,8 +27,8 @@ from logconfig import logger
 
 # External modules can modify the client's message callback behaviour
 # by replacing message_callback with a custom function. This function
-# must have arguments (topic: str, message: dict) and return a JSON
-# object. Any additional arguments must be given default values.
+# must have arguments (topic: str, message: str) and return a JSON
+# string. Any additional arguments must be given default values.
 message_callback = None
 
 _active_threads = []
@@ -50,6 +62,21 @@ def _on_connect(client, userdata, flags, return_code, properties=None):
         logger.info(f"Subscribed to topic '{topic}'.")
 
 
+def publish(message: str):
+    """
+    This function publishes messages to PUBLISH_TOPIC. It automatically
+    checks whether the client is connected to the server before
+    attempting to publish.
+    """
+    if client.is_connected():
+        client.publish(PUBLISH_TOPIC, payload=message)
+        logger.info(f"To {PUBLISH_TOPIC} published: {message}")
+        return "Success"
+    else:
+        logger.error("Client is not connected.")
+        return "Error: Client is not connected."
+
+
 def _on_message(client, userdata, message):
     """
     Callback function for receiving messages from a subscribed topic.
@@ -63,8 +90,7 @@ def _on_message(client, userdata, message):
     response = json.dumps({"Response": "Default"})
     if message_callback is not None:
         response = message_callback(topic, message)
-    client.publish(PUBLISH_TOPIC, payload=response)
-    logger.info(f"To {PUBLISH_TOPIC} published: {response}")
+    publish(response)
 
 
 def cleanup():
@@ -105,9 +131,3 @@ connection_thread.daemon = True # Needed for proper program termination.
 connection_thread.start()
 _active_threads.append(connection_thread)
 time.sleep(1) # Let client establish connection before using it.
-
-
-if __name__ == "__main__":
-    client.publish(PUBLISH_TOPIC, payload=json.dumps({"message": "hello"}))
-
-    input()
