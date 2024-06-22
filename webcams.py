@@ -43,7 +43,7 @@ def connect_cameras():
             connected_webcams.append(i)
             capture.release()
     
-    logger.info("Connected to " + str(len(connected_webcams)) + " webcams.")
+    logger.info(f"Connected to {len(connected_webcams)} webcams.")
     return None
 
 
@@ -79,8 +79,7 @@ def request_image(camera_index: int):
     Returns:
         str: Status of executed function.
     """
-    logger.info("Requesting image from camera at index " + str(camera_index)
-        + ".")
+    logger.info(f"Requesting image from camera at index {camera_index}.")
     
     if camera_index not in connected_webcams:
         logger.error("Invalid index.")
@@ -99,5 +98,5 @@ def request_image(camera_index: int):
     cv2.imwrite(image_path, image)
     capture.release()
     
-    logger.info("Image saved at " + image_path + ".")
-    return "Sucess: Image saved at " + image_path
+    logger.info(f"Image saved at {image_path}")
+    return f"Sucess: Image saved at {image_path}"

@@ -50,8 +50,7 @@ def _request_name(serial_connection: serial.Serial):
         if (len(serial_response) > 2):
             if (serial_response[0] == "@" and serial_response[-1] == "@"):
                 serial_response = serial_response.strip("@")
-                logger.info("Found device '" + serial_response
-                    + "' after " + str(i) + " attempts.")
+                logger.info(f"Found device '{serial_response}' after {i} attempts.")
                 return serial_response
     
     logger.error("Could not find device name.")
@@ -86,7 +85,7 @@ def connect_devices():
                 connected_boards[connection_name] = serial_connection
             serial_connection.close()
     
-    logger.info("Connected to " + str(len(connected_boards)) + " devices.")
+    logger.info(f"Connected to {len(connected_boards)} devices.")
     return None
 
 
@@ -102,8 +101,7 @@ def send_message(device_name: str, message: str):
     Returns:
         str: Response from device (or error message).
     """
-    logger.info("Sending message '" + message + "' to device '"
-        + device_name + "'")
+    logger.info(f"Sending message '{message}' to device '{device_name}'.")
     
     if device_name not in connected_boards:
         logger.error("Device name not found.")
@@ -125,8 +123,7 @@ def send_message(device_name: str, message: str):
                 if (serial_response[0] == "#" and serial_response[-1] == "#"):
                     serial_response = serial_response.strip("#")
                     connected_boards[device_name].close()
-                    logger.info("Received message '" + serial_response
-                        + "' after " + str(i) + " attempts.")
+                    logger.info(f"Received message '{serial_response}' after {i} attempts.")
                     return serial_response
     
     logger.error("No valid response received.")
