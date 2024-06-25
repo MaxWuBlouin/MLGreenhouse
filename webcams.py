@@ -3,9 +3,7 @@ This module interfaces with all webcams connected to the Raspberry Pi.
 The indices of all functional webcams are added to connected_webcams.
 """
 
-
-import datetime
-import os
+import base64
 
 import cv2
 
@@ -14,13 +12,6 @@ from logconfig import logger
 connected_webcams = []
 
 MAX_CAMERAS = 10
-DIRECTORY = os.path.dirname(__file__)
-IMAGE_DIRECTORY = DIRECTORY + "/images/"
-
-
-if not os.path.exists(IMAGE_DIRECTORY):
-    logger.info("Creating images directory.")
-    os.makedirs(IMAGE_DIRECTORY)
 
 
 def connect_cameras():
@@ -47,28 +38,10 @@ def connect_cameras():
     return None
 
 
-def _generate_timestamp():
-    """
-    Generates timestamp (str) in format YYYY-MM-DD_HH-MM-SS. This
-    string contains only legal filename characters.
-
-    Args:
-        None
-    
-    Returns:
-        str: Generated timestamp string.
-    """
-    datestamp = str(datetime.datetime.now())
-    datestamp = datestamp.split(".")[0]
-    datestamp = datestamp.replace(":", "-")
-    datestamp = datestamp.replace(" ", "_")
-    return datestamp
-
-
 def request_image(camera_index: int):
     """
     Captures image from webcam (selected by index from
-    connected_webcams) and saves it under "images" folder.
+    connected_webcams) and returns it as .jpg image.
     Note: The index corresponds to the camera index listed in
     connected_webcams, not the index of connected_webcams itself.
 
@@ -77,26 +50,34 @@ def request_image(camera_index: int):
             to desired webcam.
     
     Returns:
-        str: Status of executed function.
+        str: Status message.
+        numpy.ndarray: Image encoded in .jpg format.
+
     """
     logger.info(f"Requesting image from camera at index {camera_index}.")
     
     if camera_index not in connected_webcams:
         logger.error("Invalid index.")
-        return "Error: Invalid index."
+        status = "Error: Invalid index."
+        return status, None
+    
     capture = cv2.VideoCapture(camera_index)
     if not capture.isOpened():
         logger.error("Could not open camera.")
-        return "Error: Could not open camera."
-    result, image = capture.read()
-    if not result:
-        logger.error("Error occurred while reading webcam.")
-        return "Error: Error occurred while reading webcam."
+        status = "Error: Could not open camera."
+        return status, None
     
-    image_name = str(camera_index) + "_" + _generate_timestamp() + ".jpg"
-    image_path = IMAGE_DIRECTORY + image_name
-    cv2.imwrite(image_path, image)
+    result, image = capture.read()
     capture.release()
     
-    logger.info(f"Image saved at {image_path}")
-    return f"Sucess: Image saved at {image_path}"
+    if not result:
+        logger.error("Error occurred while reading webcam.")
+        status = "Error: Error occurred while reading webcam."
+        return status, None
+    
+    result, image = cv2.imencode(".jpg", image)    
+    image_as_bytes = base64.b64encode(image)
+    image_as_text = image_as_bytes.decode()
+    status = "Success"
+    
+    return status, image_as_text
