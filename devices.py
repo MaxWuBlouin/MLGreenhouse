@@ -126,5 +126,6 @@ def send_message(device_name: str, message: str):
                     logger.info(f"Received message '{serial_response}' after {i} attempts.")
                     return serial_response
     
+    connected_boards[device_name].close()
     logger.error("No valid response received.")
     return "Error: No valid response received."

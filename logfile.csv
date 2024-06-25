@@ -1,4 +1,0 @@
-2024-06-25 00:08:56,071,MLGreenhouse_logger,INFO,aws_client,From raspi/command received message.
-2024-06-25 00:08:56,086,MLGreenhouse_logger,INFO,main,Received shutdown command.
-2024-06-25 00:08:56,102,MLGreenhouse_logger,INFO,aws_client,Published to raspi/response.
-2024-06-25 00:08:56,103,MLGreenhouse_logger,INFO,aws_client,Client disconnected from AWS server.
