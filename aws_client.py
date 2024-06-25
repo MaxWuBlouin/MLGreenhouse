@@ -70,7 +70,7 @@ def publish(message: str):
     """
     if client.is_connected():
         client.publish(PUBLISH_TOPIC, payload=message)
-        logger.info(f"To {PUBLISH_TOPIC} published: {message}")
+        logger.info(f"Published to {PUBLISH_TOPIC}.")
         return "Success"
     else:
         logger.error("Client is not connected.")
@@ -84,12 +84,11 @@ def _on_message(client, userdata, message):
     """
     topic = message.topic
     message = message.payload.decode()
-    message = json.loads(message)
-    logger.info(f"From {topic} received message: {message}")
+    logger.info(f"From {topic} received message.")
 
     response = json.dumps({"Response": "Default"})
     if message_callback is not None:
-        response = message_callback(topic, message)
+        response = message_callback(message)
     publish(response)
 
 
