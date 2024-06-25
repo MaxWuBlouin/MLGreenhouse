@@ -3,6 +3,7 @@ This module interfaces with all webcams connected to the Raspberry Pi.
 The indices of all functional webcams are added to connected_webcams.
 """
 
+
 import base64
 
 import cv2
@@ -79,5 +80,6 @@ def request_image(camera_index: int):
     image_as_bytes = base64.b64encode(image)
     image_as_text = image_as_bytes.decode()
     status = "Success"
+    logger.info(f"Successfully returned image from index {camera_index}.")
     
     return status, image_as_text

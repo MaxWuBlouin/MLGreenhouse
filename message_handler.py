@@ -1,3 +1,9 @@
+"""
+This module handles formatting-related tasks for sending messages to
+and from the AWS server in JSON format.
+"""
+
+
 import json
 import datetime
 
@@ -109,9 +115,3 @@ def message_errors(message:str):
         return error
 
     return None
-
-
-def decode_message(message):
-    if ("header" not in message or "payload" not in message):
-        return ""
-    pass
