@@ -3,7 +3,7 @@
 ## Setup Requirements
 ### Python libraries
 - paho-mqtt
-- serial
+- pyserial
 - sendgrid
 - jsonschema
 - opencv-python
