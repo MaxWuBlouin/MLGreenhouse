@@ -3,8 +3,25 @@ import json
 import jsonschema
 
 
-MESSAGE_TYPES = ["command", "data", "status"]
 TARGETS = ["webcams", "devices", "shutdown"]
+MAX_WEBCAMS = -1
+PAYLOAD_SCHEMAS = {
+    "webcams": {
+        "type": "object",
+        "properties": {
+            "index": {"type": "integer",
+                      "minimum": 0,
+                      "maximum": MAX_WEBCAMS}
+        },
+        "required": ["index"]
+    },
+    "devices": {
+
+    },
+    "shutdown:": {
+
+    }
+}
 
 SCHEMA = {
     "type": "object",
@@ -12,12 +29,10 @@ SCHEMA = {
         "header": {
             "type": "object",
             "properties": {
-                "message_type": {"type": "string",
-                                 "enum": MESSAGE_TYPES},
                 "target": {"type": "string",
                            "enum": TARGETS},
             },
-            "required": ["message_type", "target"]
+            "required": ["target"]
         },
         "payload": {
             "type": "object"
@@ -27,20 +42,15 @@ SCHEMA = {
 }
 
 
-test1 = {}
-test2 = "{}"
-test3 = json.dumps({"header": {},
-                    "payload": {}})
-test4 = json.dumps({
+_test_data = json.dumps({
     "header": {
         "message_type": "command",
         "target": "webcams"
     },
-    "payload": {}
+    "payload": {
+        "index": 1
+    }
 })
-
-
-_test_data = test4
 
 
 def validate_message(message: str):
@@ -64,6 +74,10 @@ def validate_message(message: str):
 
     try:
         jsonschema.validate(instance=message, schema=SCHEMA)
+
+        jsonschema.validate(
+            instance=message["payload"],
+            schema=PAYLOAD_SCHEMAS[message["header"]["target"]])
     except:
         return "Error"
     
