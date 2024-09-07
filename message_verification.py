@@ -4,16 +4,9 @@ import jsonschema
 
 
 TARGETS = ["webcams", "devices", "shutdown"]
-MAX_WEBCAMS = -1
 PAYLOAD_SCHEMAS = {
     "webcams": {
-        "type": "object",
-        "properties": {
-            "index": {"type": "integer",
-                      "minimum": 0,
-                      "maximum": MAX_WEBCAMS}
-        },
-        "required": ["index"]
+
     },
     "devices": {
 
