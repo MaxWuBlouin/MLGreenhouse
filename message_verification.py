@@ -24,28 +24,25 @@ SCHEMA = {
 }
 
 
-def validate_message(message: str):
+def valid_message(message: str):
     """
     All incoming messages from AWS server are checked for formatting
-    errors. For each error, the appropriate response is sent back
-    to the server. Function returns None if the incoming message has
-    been formatted properly.
+    errors. Returns True if valid format, False otherwise.
 
     Args:
         message (str):  The string to check errors for.
 
     Returns:
-        str:    The error message to send to the server. If no error
-                is found, funtion returns None.
+        bool:   True if valid format, False otherwise.
     """
     try:
         message = json.loads(message)
     except:
-        return "Message not in valid JSON format."
+        return False
 
     try:
         jsonschema.validate(instance=message, schema=SCHEMA)
     except:
-        return "Error"
+        return False
     
-    return "SUCCESS"
+    return True
