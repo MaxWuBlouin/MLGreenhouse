@@ -115,6 +115,7 @@ def save_image(camera_index: int):
         logger.error("Error occurred while reading webcam.")
         return "Error: Error occurred while reading webcam."
     
-    cv2.imwrite(f"{DIRECTORY}/images/webcam{camera_index}.jpg", image)
+    image_path = f"{DIRECTORY}/images/webcam{camera_index}.jpg"
+    cv2.imwrite(image_path, image)
     
-    return "SUCCESS"
+    return image_path

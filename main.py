@@ -1,14 +1,18 @@
+import os
 import json
 
 import devices
 import webcams
 import aws_client
 import message_handler
+import email_sender
 from logconfig import logger
 
 
 program_running = True
 
+
+DIRECTORY = os.path.dirname(__file__)
 
 STARTUP_MESSAGE = message_handler.encode_message(
     message_type="info",
@@ -16,56 +20,26 @@ STARTUP_MESSAGE = message_handler.encode_message(
 )
 
 
-def image_response(message:dict):
+def image_response():
     """
-    This function handles incoming image requests from the AWS server.
-    Formatting errors from the incoming request are handled by sending
-    the appropriate error response back to the server. Images are
-    encoded and sent as b64 strings, which must be properly decoded by
-    the server.
+    Iterates through all connected webcams and saves an image of
+    each to the 'images' directory. Each of these images is then
+    attached to an email which is sent to all subscribed email
+    recipients.
 
     Args:
-        message (dict): The incoming image request.
-
+        None
+    
     Returns:
-        str:    Response to the AWS server, which contains an image
-                string in its payload.
+        str:    Status update after images have been sent.
     """
-    if "index" not in message["payload"]:
-        response = message_handler.encode_message(
-            message_type="error",
-            payload={"message": "Payload missing index."}
-        )
-        return response
-    
-    try:
-        index = int(message["payload"]["index"])
-    except:
-        response = message_handler.encode_message(
-            message_type="error",
-            payload={"message": "Invalid index given."}
-        )
-        return response
-    
-    if index < 0 or index >= len(webcams.connected_webcams):
-        response = message_handler.encode_message(
-            message_type="error",
-            payload={"message": "Invalid index given."}
-        )
-        return response
+    image_paths = []
+    for webcam in webcams.connected_webcams:
+        image_paths.append(webcams.save_image(webcam))
 
-    result, image = webcams.request_image(index)
-    message_type = "data"
-    payload = {}
-    payload["message"] = result
-    payload["image"] = image
+    email_sender.send_email(attachments=image_paths)
 
-    response = message_handler.encode_message(
-        message_type=message_type,
-        payload=payload
-    )
-
-    return response
+    return "Sent images via email."
 
 
 def device_response(message:dict):
@@ -135,7 +109,8 @@ def custom_response(message):
 
     target = message["header"]["target"]
     if target == "webcams":
-        return image_response(message)
+        message_type="info"
+        payload["message"] = image_response()
     elif target == "devices":
         return device_response(message)
     elif target == "shutdown":
