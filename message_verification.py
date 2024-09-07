@@ -4,17 +4,6 @@ import jsonschema
 
 
 TARGETS = ["webcams", "devices", "shutdown"]
-PAYLOAD_SCHEMAS = {
-    "webcams": {
-
-    },
-    "devices": {
-
-    },
-    "shutdown:": {
-
-    }
-}
 
 SCHEMA = {
     "type": "object",
@@ -33,17 +22,6 @@ SCHEMA = {
     },
     "required": ["header", "payload"]
 }
-
-
-_test_data = json.dumps({
-    "header": {
-        "message_type": "command",
-        "target": "webcams"
-    },
-    "payload": {
-        "index": 1
-    }
-})
 
 
 def validate_message(message: str):
@@ -67,15 +45,7 @@ def validate_message(message: str):
 
     try:
         jsonschema.validate(instance=message, schema=SCHEMA)
-
-        jsonschema.validate(
-            instance=message["payload"],
-            schema=PAYLOAD_SCHEMAS[message["header"]["target"]])
     except:
         return "Error"
     
     return "SUCCESS"
-
-
-if __name__ == "__main__":
-    print(validate_message(_test_data))
