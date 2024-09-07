@@ -4,6 +4,7 @@ The indices of all functional webcams are added to connected_webcams.
 """
 
 
+import os
 import base64
 
 import cv2
@@ -13,6 +14,7 @@ from logconfig import logger
 connected_webcams = []
 
 MAX_CAMERAS = 10
+DIRECTORY = os.path.dirname(__file__)
 
 
 def connect_cameras():
@@ -83,3 +85,36 @@ def request_image(camera_index: int):
     logger.info(f"Successfully returned image from index {camera_index}.")
     
     return status, image_as_text
+
+
+def save_image(camera_index: int):
+    """
+    Captures image from webcam (selected by index from
+    connected_webcams) and saves it as .jpg image.
+    Note: The index corresponds to the camera index listed in
+    connected_webcams, not the index of connected_webcams itself.
+
+    Args:
+        camera_index (int): Index in connected_webcams corresponding
+            to desired webcam.
+    
+    Returns:
+        str: Status message.
+    """
+    logger.info(f"Requesting image from camera at index {camera_index}.")
+    
+    capture = cv2.VideoCapture(camera_index)
+    if not capture.isOpened():
+        logger.error("Could not open camera.")
+        return "Error: Could not open camera."
+    
+    result, image = capture.read()
+    capture.release()
+
+    if not result:
+        logger.error("Error occurred while reading webcam.")
+        return "Error: Error occurred while reading webcam."
+    
+    cv2.imwrite(f"{DIRECTORY}/images/webcam{camera_index}.jpg", image)
+    
+    return "SUCCESS"

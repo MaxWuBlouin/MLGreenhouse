@@ -7,3 +7,4 @@
 - sendgrid
 - jsonschema
 - opencv-python
+- schedule
