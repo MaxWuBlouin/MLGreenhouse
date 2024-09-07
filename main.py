@@ -99,9 +99,13 @@ def device_response(message:dict):
 
 
 def custom_response(message):
-    errors = message_handler.message_errors(message)
-    if errors is not None:
-        return errors
+    if not message_handler.valid_message(message):
+        error = message_handler.encode_message(
+            message_type="error",
+            payload={"message": "Message not in valid JSON format."}
+        )
+        return error
+    
     message = json.loads(message)
 
     message_type = "none"
