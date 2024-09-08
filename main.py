@@ -1,5 +1,8 @@
 import os
 import json
+import time
+
+import schedule
 
 import devices
 import webcams
@@ -135,14 +138,15 @@ def custom_response(message):
     return response
 
 
-devices.connect_devices()
-webcams.connect_cameras()
+if __name__ == "__main__":
+    devices.connect_devices()
+    webcams.connect_cameras()
 
-logger.info("Running main program.")
+    logger.info("Running main program.")
 
-aws_client.message_callback = custom_response
+    aws_client.message_callback = custom_response
+    aws_client.publish(STARTUP_MESSAGE)
 
-aws_client.publish(STARTUP_MESSAGE)
-
-while program_running:
-    pass
+    while program_running:
+        schedule.run_pending()
+        time.sleep(1)
