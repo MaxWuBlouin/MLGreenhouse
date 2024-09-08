@@ -9,6 +9,7 @@ import webcams
 import aws_client
 import message_handler
 import email_sender
+import aws_responses
 from logconfig import logger
 
 
@@ -117,7 +118,7 @@ def custom_response(message):
     target = message["header"]["target"]
     if target == "webcams":
         message_type="info"
-        payload["message"] = image_response()
+        payload["message"] = aws_responses.image_response()
     elif target == "devices":
         return device_response(message)
     elif target == "shutdown":

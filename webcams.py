@@ -5,6 +5,7 @@ The indices of all functional webcams are added to connected_webcams.
 
 
 import os
+import time
 import base64
 
 import cv2
@@ -108,6 +109,7 @@ def save_image(camera_index: int):
         logger.error("Could not open camera.")
         return "Error: Could not open camera."
     
+    time.sleep(0.5)
     result, image = capture.read()
     capture.release()
 
