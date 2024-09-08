@@ -1,5 +1,3 @@
-import os
-import json
 import time
 
 import schedule
@@ -8,15 +6,9 @@ import devices
 import webcams
 import aws_client
 import message_handler
-import email_sender
 import aws_responses
 from logconfig import logger
 
-
-program_running = True
-
-
-DIRECTORY = os.path.dirname(__file__)
 
 STARTUP_MESSAGE = message_handler.encode_message(
     message_type="info",
