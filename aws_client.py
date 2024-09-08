@@ -31,6 +31,8 @@ from logconfig import logger
 # string. Any additional arguments must be given default values.
 message_callback = None
 
+server_active = True
+
 _active_threads = []
 
 PUBLISH_TOPIC = "raspi/response"
