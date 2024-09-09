@@ -5,6 +5,7 @@ by bundling together functions with similar purposes.
 """
 
 
+import os
 import json
 
 import message_handler
@@ -13,6 +14,9 @@ import devices
 import email_sender
 import aws_client
 from logconfig import logger
+
+
+DIRECTORY = os.path.dirname(__file__) + "/"
 
 
 def status_update():
@@ -25,7 +29,9 @@ def status_update():
     for webcam in webcams.connected_webcams:
         attachments_paths.append(webcams.save_image(webcam))
 
-    #TODO: Add all sensor data to attachments
+    attachments_paths.append(f"{DIRECTORY}data/level.csv")
+    attachments_paths.append(f"{DIRECTORY}data/ph.csv")
+    attachments_paths.append(f"{DIRECTORY}data/tds.csv")
 
     email_sender.send_email(attachments=attachments_paths)
 
@@ -134,6 +140,10 @@ def custom_response(message):
         message_type="info"
         payload["message"] = "Shutting down."
         aws_client.server_active = False
+    elif target == "status":
+        status_update()
+        message_type="info"
+        payload["message"] = "Status update sent."
     else:
         message_type = "error"
         payload["message"] = "Invalid target given."

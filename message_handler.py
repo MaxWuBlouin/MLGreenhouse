@@ -12,7 +12,7 @@ import jsonschema
 
 SOURCE = "raspberry-pi"
 SERVER = "aws-server"
-TARGETS = ["webcams", "devices", "shutdown"]
+TARGETS = ["webcams", "devices", "shutdown", "status"]
 
 SCHEMA = {
     "type": "object",
