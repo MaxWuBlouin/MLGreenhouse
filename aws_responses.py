@@ -15,6 +15,23 @@ import aws_client
 from logconfig import logger
 
 
+def status_update():
+    """
+    Sends email with images and sensor data from the past day.
+    """
+
+    attachments_paths = []
+
+    for webcam in webcams.connected_webcams:
+        attachments_paths.append(webcams.save_image(webcam))
+
+    #TODO: Add all sensor data to attachments
+
+    email_sender.send_email(attachments=attachments_paths)
+
+    return "Sent status update via email."
+
+
 def image_response():
     """
     Iterates through all connected webcams and saves an image of

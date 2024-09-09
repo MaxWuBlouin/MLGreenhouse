@@ -109,7 +109,7 @@ def save_image(camera_index: int):
         logger.error("Could not open camera.")
         return "Error: Could not open camera."
     
-    time.sleep(0.5)
+    time.sleep(1)
     result, image = capture.read()
     capture.release()
 
