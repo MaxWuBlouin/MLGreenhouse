@@ -26,7 +26,8 @@ if __name__ == "__main__":
     aws_client.message_callback = aws_responses.custom_response
     aws_client.publish(STARTUP_MESSAGE)
 
-    schedule.every(30).seconds.do(device_log.store_all)
+    schedule.every().minute.do(device_log.store_all)
+    schedule.every().day().at("9:00").do(aws_responses.status_update)
 
     while aws_client.server_active:
         schedule.run_pending()
