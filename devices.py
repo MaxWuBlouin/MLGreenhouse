@@ -28,7 +28,7 @@ BAUDRATE = 9600
 def _request_name(serial_connection: serial.Serial):
     """
     Requests name from serial device and returns it. Returns None if
-    name not found. Function sends 5 name requests before giving up.
+    name not found. Function sends 12 name requests before giving up.
     Note: Function assumes that serial_connection is open. Function
     also does not close serial_connection.
 
@@ -40,7 +40,7 @@ def _request_name(serial_connection: serial.Serial):
     """
     logger.info("Requesting device name.")
     
-    for i in range(1, 9):
+    for i in range(1, 13):
         serial_connection.write(("name").encode())
         time.sleep(0.01)
         serial_response = serial_connection.readline()
@@ -112,7 +112,7 @@ def send_message(device_name: str, message: str):
         except:
             logger.error("Could not open connection.")
             return "Error: Could not open connection."
-        for i in range(1, 9):
+        for i in range(1, 13):
             connected_boards[device_name].write(message.encode())
             time.sleep(0.01)
             serial_response = connected_boards[device_name].readline()

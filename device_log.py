@@ -74,7 +74,7 @@ level_logger = create_logger("Level_logger", "level.csv")
 loggers[level_logger] = "level"
 
 ph_logger = create_logger("ph_logger", "ph.csv")
-loggers[ph_logger] = "ph"
+loggers[ph_logger] = "ph_sensor"
 
 tds_logger = create_logger("tds_logger", "tds.csv")
-loggers[tds_logger] = "tds"
+loggers[tds_logger] = "tds_sensor"
