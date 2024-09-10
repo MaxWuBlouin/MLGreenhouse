@@ -71,10 +71,10 @@ def store_all():
 
 
 level_logger = create_logger("Level_logger", "level.csv")
-loggers[level_logger] = "level"
+loggers[level_logger] = "level\n"
 
 ph_logger = create_logger("ph_logger", "ph.csv")
-loggers[ph_logger] = "ph_sensor"
+loggers[ph_logger] = "ph_sensor\n"
 
 tds_logger = create_logger("tds_logger", "tds.csv")
-loggers[tds_logger] = "tds_sensor"
+loggers[tds_logger] = "tds_sensor\n"
