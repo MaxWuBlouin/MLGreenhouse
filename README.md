@@ -1,5 +1,5 @@
 # MLGreenhouse
-An automated hydroponics garden that monitors daylight cycles, water flow, nutrient levels, and pH using a Raspberry Pi.
+An automated hydroponics garden that monitors daylight cycles, water flow, nutrient levels, and pH using a Raspberry Pi. *(Please note that MLGreenhouse is currently undergoing a significant overhaul. Thus, documentation may not reflect current implementation, but rather planned implementation for the near future.)*
 ## Physical Architecture
 From a physical standpoint, MLGreenhouse is laid out as follows:
 ![image](doc/physical_architecture.jpg)
