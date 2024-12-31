@@ -1,15 +1,15 @@
 # MLGreenhouse
 ## Physical Architecture
 From a physical standpoint, MLGreenhouse is laid out as follows:
-![image](images/physical_architecture.jpg)
+![image](doc/physical_architecture.jpg)
 ### Raspberry Pi
-![image](images/raspberry_pi.jpg)
+![image](doc/raspberry_pi.jpg)
 The heart of the software lies in the Raspberry Pi. It manages all resources in the greenhouse, dictating how they interact with each other and the Internet.
 ### ESP32
-![image](images/esp32.jpg)
+![image](doc/esp32.jpg)
 The ESP32 controls all sensors and most motors. It receives commands from the Raspberry Pi and sends it data via USB.
 #### Ultrasonic Sensor
-![image](images/ultrasonic_sensor.jpg)
+![image](doc/ultrasonic_sensor.jpg)
 The ultrasonic sensor measures the distance between itself and the water below it, thus determining the amount of water stored inside.
 #### PH Sensor
 *image of pH sensor*
@@ -21,10 +21,10 @@ TDS stands for total dissolved solids. As solid begins to accumulate in the syst
 *image of temperature/humidity sensor*
 The temperature/humidity sensor is capable of sending two distinct data values, one corresponding to the temperature of the environment and the other corresponding to the humidity.
 #### Peristaltic Pumps
-![image](images/peristaltic_pumps.jpg)
+![image](doc/peristaltic_pumps.jpg)
 The peristaltic pumps add controlled amounts of liquids to the water reservoir. These can be used to add water when the water supply is low, raise/lower the pH through plant-safe acid and base, and add nutrient to the water.
 ### Webcams
-![image](images/webcams.jpg)
+![image](doc/webcams.jpg)
 The webcams are connected directly to the Raspberry Pi and transmit images of the plants whenever the Raspberry Pi requests them.
 ### Water Pumps
 *image of water pumps*
@@ -34,7 +34,7 @@ The water pumps are either run continuously or are controlled via a timer, depen
 The lights simulate sunlight for the plants and are controlled via an outlet timer.
 ## Software Architecture
 From a software point of view, MLGreenhouse is laid out as follows:
-![image](images/software_architecture.jpg)
+![image](doc/software_architecture.jpg)
 ### Docker Image
 MLGreenhouse is run through a containerized application. As such, it must be separated into an Docker image (which stores the running program) and a Docker volume (which stores data that persists after the image is no longer running).
 #### Model
